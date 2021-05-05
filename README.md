@@ -17,5 +17,5 @@ If in cmd shows **The bot is ready!** your bot is online
 12. Go to back to [Discord Developer Portal](https://discord.com/developers) and choose your bot
 13. In left click on **General Information** and copy id
 14. In this link replace **ID** with **your bot ID**: https://discord.com/oauth2/authorize?client_id=ID&scope=bot&permissions=8589934591 and now you can invite your bot in your server
-#📜 License
+# 📜 License
 EasyStart is free-to-use.
