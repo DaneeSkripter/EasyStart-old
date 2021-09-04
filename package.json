@@ -1,5 +1,17 @@
 {
+  "name": "easystart",
+  "version": "1.2.0",
+  "description": "Bot Example for beginners",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DaneeSkripter",
+  "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "@keyv/mongo": "^1.1.0",
+    "discord.js": "^13.1.0",
+    "gcommands": "^6.2.6",
+    "keyv": "^4.0.3"
   }
 }

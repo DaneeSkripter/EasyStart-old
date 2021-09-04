@@ -1,51 +1,35 @@
-const Discord = require('discord.js')
-const client = new Discord.Client()
+const { Intents } = require("discord.js");
+const { GCommandsClient } = require("gcommands");
 const config = require('./config.json')
-const prefix = config.prefix
-const fs = require('fs');
-client.cmds = new Discord.Collection();
-
-// READY EVENT
-client.once('ready', () => {
-	console.log('The bot is ready!');
+const client = new GCommandsClient({
+  cmdDir: "commands/",
+  eventDir: "events/",
+  caseSensitiveCommands: false, // true or false | whether to match the commands' caps
+  caseSensitivePrefixes: false, // true or false | whether to match the prefix in message commands
+  unkownCommandMessage: false, // true or false | send unkownCommand Message
+  language: "english", // english, spanish, portuguese, russian, german, czech, slovak, turkish, polish, indonesian, italian
+  commands: {
+    slash: "both", //true = slash only, false = only normal, both = slash and normal
+    context: "false", // https://gcommands.js.org/docs/#/docs/main/dev/typedef/GCommandsOptionsCommandsContext
+    prefix: config.prefix, // for normal commands
+  },
+  defaultCooldown: "3s",
+  database: config.database,
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES]
+  /* DB SUPPORT
+   * redis://user:pass@localhost:6379
+   * mongodb://user:pass@localhost:27017/dbname
+   * sqlite://path/to/database.sqlite
+   * postgresql://user:pass@localhost:5432/dbname
+   * mysql://user:pass@localhost:3306/dbname
+   */
 });
 
-// COMMAND HANDLER
+client.on("ready", () => {
+  console.log("Ready");
+});
+client.on("debug", console.log); // warning | this also enables the default discord.js debug logging
+client.on("log", console.log);
 
-const cmdFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+client.login(config.token);
 
-for (const file of cmdFiles) {
-	const cmd = require(`./commands/${file}`);
-	client.cmds.set(cmd.name, cmd);
-}
-
-client.on('message', message => {
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-	const args = message.content.slice(prefix.length).trim().split(/ +/);
-	const cmd = args.shift().toLowerCase();
-
-	if (!client.commands.has(cmd)) return;
-
-	try {
-		client.commands.get(cmd).execute(message, args);
-	} catch (error) {
-		console.error(error);
-		message.reply('there was an error trying to execute that command!');
-	}
-})
-
-// EVENT HANDLER
-
-const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
-
-for (const file of eventFiles) {
-	const event = require(`./events/${file}`);
-	if (event.once) {
-		client.once(event.name, (...args) => event.execute(...args, client));
-	} else {
-		client.on(event.name, (...args) => event.execute(...args, client));
-	}
-}
-
-client.login(config.token)

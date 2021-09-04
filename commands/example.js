@@ -1,7 +1,13 @@
-module.exports = {
-	name: 'ping',
-	description: 'Bot says pong.',
-	execute(message, args) {
-		message.channel.send('Pong.');
-	},
-};
+const { Command } = require('gcommands')
+
+module.exports = class ping extends Command {
+    constructor(...args) {
+        super(...args, {
+            name: 'ping',
+            description: 'Says pong'
+        })
+    }
+
+    async run({client, respond, edit}, args) {
+		respond('Pong!')
+	}}

@@ -1,5 +1,6 @@
 
 {  
     "token": "",
-    "prefix": "!"
+    "prefix": "!",
+    "database": "starts with mongodb://"
 }
